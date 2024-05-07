@@ -1,49 +1,40 @@
-import logo from './logo.svg';
 import './App.css';
 import { useState } from 'react'
 
-const order = [100, 2, 500];
 function App() {
-  const [counter, setCounter] = useState(
-    order.reduce((total, curr) => (total + curr))
-  );
-  const [info, setInfo] = useState({
-    name: 'linh',
-    age: '12',
+  const [jobs, setJobs] = useState(( ) => {
+    return JSON.parse(localStorage.getItem('jobs')) ?? [];
   });
-  const handleIncrease = () => {
-    // setCounter(counter + 1);
-    // setCounter(counter + 1);
-    // setCounter(counter + 1);
-    // how to setCounter + 3 and re-render 1 time =>use callback in setState
-
-    setCounter(pre => pre + 1)
-    setCounter(pre => pre + 1)
-    setCounter(pre => pre + 1)
+  const [job, setJob] = useState();
+  const handleJob = (e) => {
+    setJob(e.target.value);
   }
 
-  const handleAddInfo = () => {
-    setInfo({
-      ...info,
-      bio: 'yeu mau hong'
-    })
+  const handSubmit = () => {
+    setJobs(pre => {
+      const jsonJob = JSON.stringify([...pre, job]);
+      localStorage.setItem('jobs', jsonJob);
+      return [...pre, job];
+    });
+    setJob('')
   }
 
   return (
-    <div className="App">
+    <div style={{padding:20}}>
       <div>
-        <h1>add info</h1>
-        <p>{JSON.stringify(info)}</p>
-        <button onClick={handleAddInfo}>
-          add information
-        </button>
-      </div>
-      <div>
-        <h1>counter</h1>
-        <p>{counter}</p>
-        <button onClick={handleIncrease}>
-          increase
-        </button>
+        <label htmlFor="">checkbox</label>
+        <input type="text"
+               value={job}
+               onChange={e => handleJob(e)}
+        />
+        <button onClick={handSubmit}>submit</button>
+        <ul>
+          {
+            jobs.map((job, index) => (
+              <li key={index}>{job}</li>
+            ))
+          }
+        </ul>
       </div>
     </div>
   );
